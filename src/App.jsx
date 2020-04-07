@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo } from "react";
-import { useLocalStorage } from "react-use";
+import { useLocalStorage, useSearchParam } from "react-use";
 import { CssBaseline, ThemeProvider, Container } from "@material-ui/core";
 import theme from "./theme";
 import Filter from "./Filter";
@@ -7,8 +7,15 @@ import Chart from "./Chart";
 import Title from "./Title";
 import Footer from "./Footer";
 
+let didSeed = false
+
 const App = () => {
+  const seededData = useSearchParam('data')
   const [filters, onChange] = useLocalStorage("filters", []);
+  if (!didSeed && seededData) {
+    onChange(seededData.split(','))
+    didSeed = true
+  }
 
   const sanitizedInputFilters = useMemo(
     () =>
